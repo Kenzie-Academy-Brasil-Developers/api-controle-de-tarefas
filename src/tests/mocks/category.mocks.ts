@@ -1,7 +1,7 @@
 export const category = {
-    name: "Example"
-}
+   name: 'Example'
+};
 
 export const invalidDataCategory = {
-    name: 123,
-}
+   name: 123
+};
