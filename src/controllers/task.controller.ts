@@ -19,7 +19,7 @@ export class TaskController {
 
    findMany = async (request: Request, response: Response): Promise<Response> => {
       const { category } = request.query;
-      const tasks = await this.taskService.findMany(category as string); // Convertendo para string, pois query params são sempre strings
+      const tasks = await this.taskService.findMany(category as string);
       return response.status(200).json(tasks);
    };
 
