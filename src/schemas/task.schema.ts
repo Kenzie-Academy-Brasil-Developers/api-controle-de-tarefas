@@ -6,8 +6,11 @@ export const taskSchema = z.object({
    title: z.string().min(1),
    content: z.string().min(1),
    finished: z.boolean(),
+   userId: z.number(),
    categoryId: z.number().optional().nullish()
 });
+
+export const taskCreateBody = taskSchema.pick({ title: true, content: true, categoryId: true });
 
 export const taskWithCategorySchema = taskSchema.extend({
    category: categorySchema.nullable().optional()

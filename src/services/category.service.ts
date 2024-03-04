@@ -4,9 +4,9 @@ import { TCategory, TCategoryData } from '../interfaces/category.interface';
 
 @injectable()
 export class CategoryService {
-   create = async (data: TCategoryData): Promise<TCategory> => {
+   create = async (body: TCategoryData, userId: number): Promise<TCategory> => {
       const category = await prisma.category.create({
-         data
+         data: { ...body, userId }
       });
       return category;
    };

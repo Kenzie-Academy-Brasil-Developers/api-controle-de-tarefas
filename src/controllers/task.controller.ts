@@ -6,8 +6,9 @@ export class TaskController {
    private taskService = container.resolve(TaskService);
 
    create = async (request: Request, response: Response): Promise<Response> => {
+      const id = response.locals.decode.id;
       const body = request.body;
-      const task = await this.taskService.create(body);
+      const task = await this.taskService.create(body, id);
       return response.status(201).json(task);
    };
 
@@ -19,7 +20,8 @@ export class TaskController {
 
    findMany = async (request: Request, response: Response): Promise<Response> => {
       const { category } = request.query;
-      const tasks = await this.taskService.findMany(category as string);
+      const id = response.locals.decode?.id;
+      const tasks = await this.taskService.findMany(category as string, id);
       return response.status(200).json(tasks);
    };
 

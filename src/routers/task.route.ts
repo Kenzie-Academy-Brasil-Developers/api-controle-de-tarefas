@@ -1,15 +1,30 @@
 import { Router } from 'express';
-import { validateId } from '../middlewares/validateId.middleware';
 import { TaskController } from '../controllers/task.controller';
+import { AuthOwnerTask } from '../middlewares/authOwnerTask.middleware';
+import { AuthToken } from '../middlewares/authToken.middleware';
 import { ValidateBody } from '../middlewares/validateBody.middleware';
-import { taskSchemaCreate, taskSchemaUpdate } from '../schemas/task.schema';
 import { ValidateCategory } from '../middlewares/validateCategory.middleware';
+import { validateId } from '../middlewares/validateId.middleware';
+import { taskCreateBody, taskSchemaUpdate } from '../schemas/task.schema';
 
 export const taskRouter = Router();
 const taskController = new TaskController();
 
-taskRouter.post('/', ValidateBody.execute(taskSchemaCreate), ValidateCategory.execute, taskController.create);
-taskRouter.get('/', taskController.findMany);
-taskRouter.get('/:id', validateId.task, taskController.findOne);
-taskRouter.patch('/:id', validateId.task, ValidateBody.execute(taskSchemaUpdate), taskController.update);
-taskRouter.delete('/:id', validateId.task, taskController.delete);
+taskRouter.post(
+   '/',
+   AuthToken.execute,
+   ValidateBody.execute(taskCreateBody),
+   ValidateCategory.execute,
+   taskController.create
+);
+taskRouter.get('/:id', AuthToken.execute, validateId.task, AuthOwnerTask.execute, taskController.findOne);
+taskRouter.get('/', AuthToken.execute, taskController.findMany);
+taskRouter.patch(
+   '/:id',
+   AuthToken.execute,
+   ValidateBody.execute(taskSchemaUpdate),
+   validateId.task,
+   AuthOwnerTask.execute,
+   taskController.update
+);
+taskRouter.delete('/:id', AuthToken.execute, validateId.task, AuthOwnerTask.execute, taskController.delete);

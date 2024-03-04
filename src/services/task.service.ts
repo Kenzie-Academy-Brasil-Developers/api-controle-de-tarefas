@@ -4,9 +4,9 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class TaskService {
-   create = async (data: TTask): Promise<TTaskSchema> => {
+   create = async (body: TTask, id: number): Promise<TTaskSchema> => {
       const task = await prisma.task.create({
-         data
+         data: { ...body, userId: id }
       });
       return task;
    };
@@ -15,18 +15,16 @@ export class TaskService {
       const task = await prisma.task.findFirst({
          where: {
             id
-         },
-         include: {
-            category: true
          }
       });
 
       return task;
    };
 
-   findMany = async (categoryName?: string): Promise<TaskWithCategoryType[] | null> => {
+   findMany = async (categoryName?: string, id?: number): Promise<TaskWithCategoryType[]> => {
       const tasks = await prisma.task.findMany({
          where: {
+            userId: id,
             ...(categoryName && {
                category: { name: categoryName }
             })
